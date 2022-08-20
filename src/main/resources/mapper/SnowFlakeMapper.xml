@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.treeman.snowflake.mapper.SnowFlakeMapper">
+    <resultMap id="snowFlakeResult" type="Snowflake">
+        <id property="id" column="id"/>
+        <result property="timeBit" column="time_bit"/>
+        <result property="workBit" column="work_bit"/>
+        <result property="dataBit" column="data_bit"/>
+        <result property="sequence" column="sequence"/>
+    </resultMap>
+
+    <sql id="selectVo">
+        select id,time_bit,work_bit,data_bit,sequence from snowflake
+    </sql>
+
+    <insert id="insertID" parameterType="Snowflake">
+        insert into snowflake(
+        <if test="id != null and id != '' ">id,</if>
+        <if test="workBit != null and workBit != '' ">work_bit,</if>
+        <if test="dataBit != null and dataBit != '' ">data_bit,</if>
+        <if test="timeBit != null and timeBit != '' ">time_bit,</if>
+        sequence
+        )values(
+        <if test="id != null and id != '' ">#{id},</if>
+        <if test="workBit != null and workBit != '' ">#{workBit},</if>
+        <if test="dataBit != null and dataBit != '' ">#{dataBit},</if>
+        <if test="timeBit != null and timeBit != '' ">#{timeBit},</if>
+        #{sequence}
+        )
+    </insert>
+
+    <delete id="deleteID" parameterType="long">
+        delete from snowflake where id = #{id}
+    </delete>
+
+    <select id="selectIDList" resultMap="snowFlakeResult">
+        <include refid="selectVo"/>
+    </select>
+</mapper>

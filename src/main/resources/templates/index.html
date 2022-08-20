@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>雪花ID生成器</title>
+<!--引入layui的css   使用thymeleaf框架输入相对路径-->
+    <link th:href="@{../static/layui/css/layui.css}" rel="stylesheet">
+<!--    引入layui的js-->
+    <script th:src="@{../static/layui/layui.js}"></script>
+</head>
+<body>
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <input id="delsnow" type="text" name="title" required  lay-verify="required" value="" placeholder="请输入雪花ID" autocomplete="off" class="layui-input">
+            </div>
+
+        </div>
+
+
+        <div class="layui-row">
+            <div class="layui-col-md3">
+                <button id="delbut" type="button" class="layui-btn layui-btn-radius layui-btn-danger" >删除雪花ID</button>
+            </div>
+            <div class="layui-col-md3">
+                <button id="searchbut" type="button" class="layui-btn layui-btn-radius layui-btn-normal">查找雪花ID</button>
+            </div>
+            <div class="layui-col-md3">
+                <button id="gen" type="button" class="layui-btn layui-btn-radius">生成雪花ID</button>
+            </div>
+        </div>
+    </div>
+    <table class="layui-table">
+        <colgroup>
+<!--            <col>-->
+            <col width="200">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>雪花ID</th>
+            <th>时间戳</th>
+            <th>机器码</th>
+            <th>数据码</th>
+            <th>序列号</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="snow:${snowflakes}">
+            <td th:text="${snow.id}"></td>
+            <td th:text="${snow.timeBit}"></td>
+            <td th:text="${snow.workBit}"></td>
+            <td th:text="${snow.dataBit}"></td>
+            <td th:text="${snow.sequence}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <script>
+        var searchbut = document.getElementById("searchbut");
+        searchbut.onclick = function () {
+            var innerText = document.getElementById("delsnow").value;
+            window.location.href="/search?id="+innerText;
+        };
+
+        var delbut = document.getElementById("delbut");
+        delbut.onclick=function () {
+            var innerText = document.getElementById("delsnow").value;
+            window.location.href="/delete?id="+innerText;
+        };
+
+        var gen = document.getElementById("gen");
+        gen.onclick = function () {
+            window.location.href="/add";
+        };
+    </script>
+</body>
+</html>
