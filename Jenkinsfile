@@ -1,6 +1,26 @@
 pipeline {
     agent any
-
+    stages {
+        stage('Diagnose') {
+            steps {
+                sh 'cat /etc/resolv.conf'
+                sh 'curl -I https://maven.aliyun.com 2>&1 | head -5'
+                sh 'mvn -version'
+                sh 'echo $HOME'
+                sh 'cat $HOME/.m2/settings.xml'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit '**/surefire-reports/*.xml'
+                }
+            }
+        }
+    }
     stages {
         stage('Build') {
             steps {
