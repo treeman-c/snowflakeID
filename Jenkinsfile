@@ -11,12 +11,12 @@ pipeline {
                 sh 'cat $HOME/.m2/settings.xml'
             }
         }
-        stage('Build') {
+        stage('Build1') {
             steps {
                 sh 'mvn clean compile -DskipTests'
             }
         }
-        stage('Test') {
+        stage('Test1') {
             steps {
                 sh 'mvn test'
             }
