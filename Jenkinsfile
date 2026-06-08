@@ -1,31 +1,11 @@
 pipeline {
     agent any
-   
+
+    environment {
+        MAVEN_OPTS = '-Dhttp.proxyHost=172.20.208.1 -Dhttp.proxyPort=10808 -Dhttps.proxyHost=172.20.208.1 -Dhttps.proxyPort=10808'
+    }
+    
     stages {
-        stage('Diagnose') {
-            steps {
-                sh 'cat /etc/resolv.conf'
-                sh 'curl -I https://maven.aliyun.com 2>&1 | head -5'
-                sh 'mvn -version'
-                sh 'echo $HOME'
-                sh 'cat $HOME/.m2/settings.xml'
-            }
-        }
-        stage('Build1') {
-            steps {
-                sh 'mvn clean compile -DskipTests'
-            }
-        }
-        stage('Test1') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit '**/surefire-reports/*.xml'
-                }
-            }
-        }
         
         stage('Build') {
             steps {
