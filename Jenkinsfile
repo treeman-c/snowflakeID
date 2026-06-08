@@ -1,5 +1,6 @@
 pipeline {
     agent any
+   
     stages {
         stage('Diagnose') {
             steps {
@@ -8,6 +9,11 @@ pipeline {
                 sh 'mvn -version'
                 sh 'echo $HOME'
                 sh 'cat $HOME/.m2/settings.xml'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile -DskipTests'
             }
         }
         stage('Test') {
@@ -20,8 +26,7 @@ pipeline {
                 }
             }
         }
-    }
-    stages {
+        
         stage('Build') {
             steps {
                 sh 'echo "开始构建..."'
