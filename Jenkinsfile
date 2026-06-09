@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "snowflakeID-app"
+        IMAGE_NAME = "snowflake-app"
         IMAGE_TAG  = "${env.BUILD_NUMBER}"
-        CONTAINER  = "snowflakeID-app"
+        CONTAINER  = "snowflake-app"
         APP_PORT   = "9000"
     }
 
