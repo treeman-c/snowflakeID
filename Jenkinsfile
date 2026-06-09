@@ -48,20 +48,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """
-                    # 停止并删除旧容器
-                    docker stop ${CONTAINER} || true
-                    docker rm   ${CONTAINER} || true
-
-                    # 启动新容器
-                    docker run -d \
-                        --name ${CONTAINER} \
-                        --restart unless-stopped \
-                        -p ${APP_PORT}:8080 \
-                        ${IMAGE_NAME}:${IMAGE_TAG}
+                    chmod +x deploy.sh
+                    ./deploy.sh \
+                        ${IMAGE_NAME}:${IMAGE_TAG} \
+                        ${CONTAINER} \
+                        ${APP_PORT}
                 """
             }
         }
-
     }
 
     post {
@@ -72,7 +66,6 @@ pipeline {
             echo "❌ 部署失败，查看上方日志"
         }
         always {
-            // 清理旧镜像，只保留最近3个版本
             sh """
                 docker images ${IMAGE_NAME} --format '{{.Tag}}' \
                     | sort -n \
