@@ -2,37 +2,83 @@ pipeline {
     agent any
 
     environment {
-        MAVEN_OPTS = '-Dhttp.proxyHost=172.20.208.1 -Dhttp.proxyPort=10808 -Dhttps.proxyHost=172.20.208.1 -Dhttps.proxyPort=10808'
+        IMAGE_NAME = "snowflakeID-app"
+        IMAGE_TAG  = "${env.BUILD_NUMBER}"
+        CONTAINER  = "snowflakeID-app"
+        APP_PORT   = "9000"
     }
-    
+
     stages {
-        
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                sh 'echo "开始构建..."'
+                checkout scm
             }
         }
 
-        stage('Test') {
+        stage('Build & Test') {
+            agent {
+                docker {
+                    image 'maven:3.9-eclipse-temurin-17'
+                    args  '-v /root/.m2:/root/.m2'
+                    reuseNode true
+                }
+            }
             steps {
-                sh 'mvn test'
+                sh 'mvn clean package -DskipTests'
             }
             post {
                 always {
-                    junit '**/surefire-reports/*.xml'
+                    junit allowEmptyResults: true,
+                          testResults: '**/surefire-reports/*.xml'
                 }
             }
         }
 
-        stage('Package') {
+        stage('Build Image') {
             steps {
-                sh 'echo "打包完成"'
+                sh """
+                    docker build \
+                        -t ${IMAGE_NAME}:${IMAGE_TAG} \
+                        -t ${IMAGE_NAME}:latest \
+                        .
+                """
             }
         }
+
+        stage('Deploy') {
+            steps {
+                sh """
+                    # 停止并删除旧容器
+                    docker stop ${CONTAINER} || true
+                    docker rm   ${CONTAINER} || true
+
+                    # 启动新容器
+                    docker run -d \
+                        --name ${CONTAINER} \
+                        --restart unless-stopped \
+                        -p ${APP_PORT}:8080 \
+                        ${IMAGE_NAME}:${IMAGE_TAG}
+                """
+            }
+        }
+
     }
 
     post {
-        success { echo '✅ 构建成功' }
-        failure { echo '❌ 构建失败' }
+        success {
+            echo "✅ 部署成功，访问 http://localhost:${APP_PORT}"
+        }
+        failure {
+            echo "❌ 部署失败，查看上方日志"
+        }
+        always {
+            // 清理旧镜像，只保留最近3个版本
+            sh """
+                docker images ${IMAGE_NAME} --format '{{.Tag}}' \
+                    | sort -n \
+                    | head -n -3 \
+                    | xargs -r -I{} docker rmi ${IMAGE_NAME}:{} || true
+            """
+        }
     }
 }
