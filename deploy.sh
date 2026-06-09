@@ -25,4 +25,4 @@ docker run -d \
     -p "${APP_PORT}:8080" \
     "$IMAGE"
 echo "脚本运行结束!"
-exit 1
+exit 0
