@@ -9,9 +9,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root123
-      MYSQL_DATABASE: snowflake
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: app123
+      MYSQL_DATABASE: demo
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mysql
     ports:
       - "3307:3306"
     volumes:
@@ -36,9 +36,9 @@ services:
     environment:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3307
-      MYSQL_DB: snowflake
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: app123
+      MYSQL_DB: demo
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mysql
       REDIS_HOST: redis
       REDIS_PORT: 6380
       SPRING_PROFILES_ACTIVE: dev   # 可切换不同环境
