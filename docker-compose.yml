@@ -1,0 +1,48 @@
+# docker-compose.yml
+version: '3.9'
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: snowflake
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: app123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis:7.0
+    container_name: redis
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-data:/data
+
+  app:
+    image: snowflake-app:latest
+    container_name: snowflake-app
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3307
+      MYSQL_DB: snowflake
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: app123
+      REDIS_HOST: redis
+      REDIS_PORT: 6380
+      SPRING_PROFILES_ACTIVE: dev   # 可切换不同环境
+    ports:
+      - "9000:8080"
+    volumes:
+      - ./logs:/app/logs
