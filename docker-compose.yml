@@ -1,6 +1,4 @@
 # docker-compose.yml
-version: "3.9"
-
 services:
 
   mysql:
@@ -46,3 +44,9 @@ services:
       - "9000:8080"
     volumes:
       - ./logs:/app/logs
+
+
+
+  volumes:
+    mysql-data:
+    redis-data:
