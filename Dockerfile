@@ -23,7 +23,8 @@ USER treeman
 
 # 从构建阶段复制 jar 包
 COPY --from=builder /app/target/*.jar app.jar
-
+ENV MYSQL_PORT=3307
+ENV REDIS_PORT=6380
 # 声明端口（Spring Boot 默认 8080）
 EXPOSE 8080
 
