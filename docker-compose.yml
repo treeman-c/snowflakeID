@@ -47,6 +47,6 @@ services:
 
 
 
-  volumes:
-    mysql-data:
-    redis-data:
+volumes:
+  mysql-data:
+  redis-data:
