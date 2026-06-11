@@ -3,7 +3,7 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: mysql
+    container_name: snow-mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root123
@@ -14,10 +14,11 @@ services:
       - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./snowflake.sql:/docker-entrypoint-initdb.d   # mysql脚本
 
   redis:
     image: redis:7.0
-    container_name: redis
+    container_name: snow-redis
     restart: always
     ports:
       - "6380:6379"
