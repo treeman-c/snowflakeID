@@ -13,6 +13,8 @@ echo "端口: $APP_PORT"
 # 1. 停止并删除旧容器
 docker ps -a --filter "name=snow" --format "{{.ID}}" | xargs -r docker rm --force
 echo "停止并删除旧容器..."
+docker volume ls | grep snow | awk '{print $2}' | xargs -r docker volume rm
+echo "删除旧卷"
 
 
 echo "脚本运行结束!"
