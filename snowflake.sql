@@ -6,6 +6,6 @@ create table snowflake(
     time_bit bigint not null comment '41位时间戳',
     work_bit bigint not null comment '5位机器码',
     data_bit bigint not null comment '5位数据码',
-    sequence bigint not null comment '12位自增序列码'
+    sequence bigint not null comment '12位自增序列码',
     primary key (id)
 )character set utf8 comment '雪花表';
