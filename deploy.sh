@@ -11,11 +11,9 @@ echo "容器: $CONTAINER"
 echo "端口: $APP_PORT"
 
 # 1. 停止并删除旧容器
-if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
-    echo "停止旧容器..."
-    docker stop "$CONTAINER"
-    docker rm   "$CONTAINER"
-fi
+docker ps -a --filter "name=snow" --format "{{.ID}}" | xargs -r docker rm --force
+echo "停止旧容器..."
+
 
 echo "脚本运行结束!"
 exit 0
