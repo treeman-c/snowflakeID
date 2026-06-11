@@ -77,12 +77,18 @@ pipeline {
             echo "❌ 部署失败，查看上方日志"
         }
         always {
-            sh """
-                docker images ${IMAGE_NAME} --format '{{.Tag}}' \
-                    | sort -n \
-                    | head -n -3 \
-                    | xargs -r -I{} docker rmi ${IMAGE_NAME}:{} || true
-            """
+            script {
+                try {
+                    sh """
+                        docker images ${IMAGE_NAME} --format '{{.Tag}}' \
+                            | sort -n \
+                            | head -n -3 \
+                            | xargs -r -I{} docker rmi ${IMAGE_NAME}:{} 2>/dev/null || true
+                    """
+                } catch (err) {
+                    echo "镜像清理失败，忽略：${err}"
+                }
+            }
         }
     }
 }
