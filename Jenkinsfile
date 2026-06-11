@@ -45,6 +45,12 @@ pipeline {
             }
         }
 
+        stage('run docker-compose container') {
+            steps {
+                sh 'docker compose up -d'
+            }
+        }
+        
         stage('Deploy') {
             steps {
                 sh """
@@ -56,11 +62,7 @@ pipeline {
                 """
             }
         }
-        stage('run docker-compose container') {
-            steps {
-                sh 'docker compose up -d'
-            }
-        }
+
     }
 
     post {
