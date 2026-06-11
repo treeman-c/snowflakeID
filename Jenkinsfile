@@ -37,11 +37,11 @@ pipeline {
         stage('构建临时镜像存放初始化sql脚本'){
             steps{
                 sh """
-                    docker volume create demo-pipeline_mysql-init
-                    docker run --rm \
+                    docker volume create demo-pipeline_mysql-init || true
+        
+                    docker run --rm -i \
                         -v demo-pipeline_mysql-init:/docker-entrypoint-initdb.d \
-                        -v $WORKSPACE/snowflake.sql:/tmp/snowflake.sql \
-                        alpine cp /tmp/snowflake.sql /docker-entrypoint-initdb.d/
+                        alpine sh -c "cat > /docker-entrypoint-initdb.d/snowflake.sql" < $WORKSPACE/snowflake.sql
                 """
             }
         }
