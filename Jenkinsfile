@@ -40,7 +40,7 @@ pipeline {
                     docker volume create demo-pipeline_mysql-init
                     docker run --rm \
                         -v demo-pipeline_mysql-init:/docker-entrypoint-initdb.d \
-                        -v $PWD/snowflake.sql:/tmp/snowflake.sql \
+                        -v $WORKSPACE/snowflake.sql:/tmp/snowflake.sql \
                         alpine cp /tmp/snowflake.sql /docker-entrypoint-initdb.d/
                 """
             }
