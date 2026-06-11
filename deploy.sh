@@ -17,12 +17,5 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
     docker rm   "$CONTAINER"
 fi
 
-# 2. 启动新容器
-echo "启动新容器..."
-docker run -d \
-    --name "$CONTAINER" \
-    --restart unless-stopped \
-    -p "${APP_PORT}:8080" \
-    "$IMAGE"
 echo "脚本运行结束!"
 exit 0
