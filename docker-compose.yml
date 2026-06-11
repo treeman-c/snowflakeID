@@ -12,7 +12,7 @@ services:
       - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./snowflake.sql:/docker-entrypoint-initdb.d   # mysql脚本
+      - ./snowflake.sql:/docker-entrypoint-initdb.d/snowflake.sql   # mysql脚本
     networks: 
       - snow-network
 
