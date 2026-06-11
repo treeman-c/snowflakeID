@@ -34,6 +34,17 @@ pipeline {
             }
         }
 
+        stage('构建临时镜像存放初始化sql脚本'){
+            steps{
+                sh """
+                    docker run --rm \
+                      -v demo-pipeline_mysql-init:/docker-entrypoint-initdb.d \
+                      -v $PWD/snowflake.sql:/tmp/snowflake.sql \
+                      alpine cp /tmp/snowflake.sql /docker-entrypoint-initdb.d/
+                """
+            }
+        }
+        
         stage('Build Image') {
             steps {
                 sh """
