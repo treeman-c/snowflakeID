@@ -45,14 +45,7 @@ pipeline {
             }
         }
 
-        stage('run docker-compose container') {
-            steps {
-                sh """
-                    docker compose up -d
-                    
-                """
-            }
-        }
+
         
         stage('Deploy') {
             steps {
@@ -65,7 +58,15 @@ pipeline {
                 """
             }
         }
-
+        
+        stage('run docker-compose container') {
+            steps {
+                sh """
+                    docker compose up -d
+                    
+                """
+            }
+        }
 
     }
 
