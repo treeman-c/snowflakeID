@@ -26,6 +26,7 @@ services:
       - redis-data:/data
     networks: 
       - snow-network
+    command: ["redis-server", "--requirepass", "treeman"]
 
   app:
     image: snowflake-app:latest
